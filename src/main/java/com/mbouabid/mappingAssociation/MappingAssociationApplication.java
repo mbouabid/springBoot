@@ -1,7 +1,10 @@
 package com.mbouabid.mappingAssociation;
 
+import com.mbouabid.mappingAssociation.entities.Clinique;
+import com.mbouabid.mappingAssociation.entities.Medecin;
 import com.mbouabid.mappingAssociation.entities.Patient;
 import com.mbouabid.mappingAssociation.entities.RendezVous;
+import com.mbouabid.mappingAssociation.service.CliniqueService;
 import com.mbouabid.mappingAssociation.service.PatientService;
 import com.mbouabid.mappingAssociation.service.RendezVousService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +17,12 @@ import java.util.Date;
 
 @SpringBootApplication
 public class MappingAssociationApplication implements CommandLineRunner {
-	@Autowired PatientService patientService;
-	@Autowired RendezVousService rendezVousService;
+	@Autowired
+	private PatientService patientService;
+	@Autowired
+	private RendezVousService rendezVousService;
+	@Autowired
+	private CliniqueService cliniqueService;
 
 	public static void main(String[] args) {
 
@@ -24,7 +31,8 @@ public class MappingAssociationApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		Patient p = new Patient(null,"mohamed",
+		// cas de many to one, one to many patients-rendezvous
+		/*Patient p = new Patient(null,"mohamed",
 				"mohamed@gmail.com",new ArrayList<RendezVous>());
 		RendezVous rdv = new RendezVous(null,new Date(),null,
 				null,null);
@@ -35,6 +43,25 @@ public class MappingAssociationApplication implements CommandLineRunner {
 		patientService.save(p);
 		rendezVousService.save(rdv);
 		patientService.reserve(p,rdv);
-		patientService.reserve(p,rdv2);
+		patientService.reserve(p,rdv2);*/
+
+		// cas de many to many medecins-cliniques
+		cliniqueService.ajouterMedecin(new Medecin(null,"mohamed","gastro","mohamed@gmail.com",null,null));
+		cliniqueService.ajouterMedecin(new Medecin(null,"ali","dermato","ali@gmail.com",null,null));
+		cliniqueService.ajouterClinique(new Clinique(null,"chifaa","Medenine",null));
+		cliniqueService.ajouterClinique(new Clinique(null,"asalaam","Medenine",null));
+		cliniqueService.ajouterClinique(new Clinique(null,"oulysse","Medenine",null));
+		cliniqueService.affecterMedecinClinique("mohamed","chifaa");
+		cliniqueService.affecterMedecinClinique("mohamed","asalaam");
+		cliniqueService.affecterMedecinClinique("ali","oulysse");
+		Medecin medecin =cliniqueService.findByNom("mohamed");
+		System.out.println(medecin.getNom()+ " "
+				+medecin.getEmail());
+		medecin.getCliniques().forEach(c->{
+			System.out.println(c.getNom()+ " à "+ c.getAdresse());
+
+		});
+
+
 	}
 }

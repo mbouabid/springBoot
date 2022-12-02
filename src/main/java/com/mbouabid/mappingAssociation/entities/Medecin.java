@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -17,4 +18,6 @@ public class Medecin {
     private String email;
     @OneToMany (mappedBy = "medecin")
     private Collection<RendezVous> rendezVous;
+    @ManyToMany (fetch = FetchType.EAGER)
+    private Collection<Clinique> cliniques = new ArrayList<>();
 }
